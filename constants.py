@@ -4,6 +4,7 @@ PK_TEST_1 = 'data_test_1/PK_TEST_1.xlsx'
 PK_TRAIN_1 = 'data_test_2/PK_TRAIN_1.xlsx'
 PK_TEST_2 = 'data_test_2/PK_TEST_2.xlsx'
 PK_TEST_3 = 'data_test_3/PK_TEST_3.xlsx'
+PK_COL = 'PK_Predict'
 
 SA_TRAIN_1_2 = 'data_test_3/SA_TRAIN_1_2.xlsx'
 SA_TRAIN_2 = 'data_test_1/SA_TRAIN_2.xlsx'
