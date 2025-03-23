@@ -19,6 +19,7 @@ NG_TEST_1 = 'data_test_1/NG_TEST_1.xlsx'
 NG_TRAIN_1 = 'data_test_2/NG_TRAIN_1.xlsx'
 NG_TEST_2 = 'data_test_2/NG_TEST_2.xlsx'
 NG_TEST_3 = 'data_test_3/NG_TEST_3.xlsx'
+NG_COL = 'NG_predict'
 
 
 NU_TRAIN_1_2 = 'data_test_3/NU_TRAIN_1_2.xlsx'
