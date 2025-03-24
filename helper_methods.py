@@ -12,7 +12,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 def generate_results_latex(df: pd.DataFrame):
     for row in df.values:
-        print(' & '.join(row))
+        row_to_print = ' & '.join(map(lambda s: f'{s:.2f}' if type(s) != str else s, row))
+        print(row_to_print + ' \\\\')
 
 
 def generate_excel(df: pd.DataFrame, preprocess_df: pd.DataFrame, model, file_name: str, col_name: str):
