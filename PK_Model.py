@@ -34,7 +34,7 @@ def preprocess_df(df_i: pd.DataFrame):
 
 
 def train_model(df: pd.DataFrame):
-    X_train = df.drop(columns=['Load'])
+    X_train = df.drop(columns=['Load', 'Year'])
     y_train = df['Load']
     xgb_params = {'subsample': 0.2, 'n_estimators': 350, 'max_depth': 7, 'learning_rate': 0.017,
                   'colsample_bytree': 0.25}
@@ -44,7 +44,7 @@ def train_model(df: pd.DataFrame):
 
 
 def generate_excel(df: pd.DataFrame, preprocess_df: pd.DataFrame, model, file_name: str):
-    X = preprocess_df.drop(columns=['Load'])
+    X = preprocess_df.drop(columns=['Load', 'Year'])
     y = model.predict(X)
     X[constants.PK_COL] = y
     df = df.join(X[constants.PK_COL], how='left')

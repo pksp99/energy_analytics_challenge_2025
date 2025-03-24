@@ -28,6 +28,8 @@ NU_TEST_1 = 'data_test_1/NU_TEST_1.xlsx'
 NU_TRAIN_1 = 'data_test_2/NU_TRAIN_1.xlsx'
 NU_TEST_2 = 'data_test_2/NU_TEST_2.xlsx'
 NU_TEST_3 = 'data_test_3/NU_TEST_3.xlsx'
+NU_COL = 'NU_predict'
+
 
 
 BY_TRAIN_1_2 = 'data_test_3/BY_TRAIN_1_2.xlsx'
