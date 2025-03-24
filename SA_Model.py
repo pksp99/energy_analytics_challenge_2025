@@ -7,18 +7,13 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, root_mean_squared_error, mean_absolute_error
 from sklearn.preprocessing import MinMaxScaler
 
+import methods
+
 warnings.simplefilter(action='ignore', category=pd.errors.PerformanceWarning)
 
 import constants
 from collections import defaultdict
 
-
-def load_df():
-    train_df = pd.read_excel(constants.ESD_TRAINING)
-    test_df = pd.read_excel(constants.ESD_TESTING)
-    df = pd.concat([train_df, test_df], axis=0, ignore_index=True)
-    df = df.fillna(0)
-    return df
 
 def add_feature_engineering(df_i: pd.DataFrame):
     df = df_i.copy()
@@ -60,24 +55,7 @@ def train_model(df: pd.DataFrame):
     return rf_model
 
 
-def generate_excel(df: pd.DataFrame, preprocess_df: pd.DataFrame, model, file_name: str):
-    X = preprocess_df.drop(columns=['Load', 'Year'])
-    y = model.predict(X)
-    X[constants.SA_COL] = y
-    df = df.join(X[constants.SA_COL], how='left')
-    df_no_na = df.dropna()
-    r2 = r2_score(df_no_na['Load'], df_no_na[constants.SA_COL])
-    rmse = root_mean_squared_error(df_no_na['Load'], df_no_na[constants.SA_COL])
-    mae = mean_absolute_error(df_no_na['Load'], df_no_na[constants.SA_COL])
-    print(f"{file_name:<30} {str(df_no_na.shape):<10}\t->\t R^2: {r2:.2f} \t RMSE: {rmse:.2f} \t MAE: {mae:.2f}")
-    df.to_excel(file_name, index=False)
 
-
-def print_partition(title=""):
-    print("\n" + "=" * 50)
-    if title:
-        print(f"{title.center(50)}")
-        print("=" * 50)
 
 
 import multiprocessing
@@ -92,8 +70,8 @@ def generate_predictions(test_case, df, df_preprocessed):
         preprocess_test_df = df_preprocessed[df_preprocessed['Year'] == 1]
 
         model = train_model(preprocess_train_df)
-        generate_excel(train_df, preprocess_train_df, model, constants.SA_TRAIN_2)
-        generate_excel(test_df, preprocess_test_df, model, constants.SA_TEST_1)
+        methods.generate_excel(train_df, preprocess_train_df, model, constants.SA_TRAIN_2, constants.SA_COL)
+        methods.generate_excel(test_df, preprocess_test_df, model, constants.SA_TEST_1, constants.SA_COL)
 
     elif test_case == 2:
         # Generate Test 2 Predictions
@@ -103,8 +81,8 @@ def generate_predictions(test_case, df, df_preprocessed):
         preprocess_test_df = df_preprocessed[df_preprocessed['Year'] == 2]
 
         model = train_model(preprocess_train_df)
-        generate_excel(train_df, preprocess_train_df, model, constants.SA_TRAIN_1)
-        generate_excel(test_df, preprocess_test_df, model, constants.SA_TEST_2)
+        methods.generate_excel(train_df, preprocess_train_df, model, constants.SA_TRAIN_1, constants.SA_COL)
+        methods.generate_excel(test_df, preprocess_test_df, model, constants.SA_TEST_2, constants.SA_COL)
 
     elif test_case == 3:
         # Generate Test 3 Predictions
@@ -114,14 +92,14 @@ def generate_predictions(test_case, df, df_preprocessed):
         preprocess_test_df = df_preprocessed[df_preprocessed['Year'] == 3]
 
         model = train_model(preprocess_train_df)
-        generate_excel(train_df, preprocess_train_df, model, constants.SA_TRAIN_1_2)
-        generate_excel(test_df, preprocess_test_df, model, constants.SA_TEST_3)
+        methods.generate_excel(train_df, preprocess_train_df, model, constants.SA_TRAIN_1_2, constants.SA_COL)
+        methods.generate_excel(test_df, preprocess_test_df, model, constants.SA_TEST_3, constants.SA_COL)
 
 def main():
-    df = load_df()
+    df = methods.load_df()
     df_preprocessed = preprocess_df(df)
 
-    print_partition("SA_Method")
+    methods.print_partition("SA_Method")
 
     # Create a list of test cases to process in parallel
     test_cases = [1, 2, 3]
