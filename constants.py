@@ -38,6 +38,7 @@ BY_TEST_1 = 'data_test_1/BY_TEST_1.xlsx'
 BY_TRAIN_1 = 'data_test_2/BY_TRAIN_1.xlsx'
 BY_TEST_2 = 'data_test_2/BY_TEST_2.xlsx'
 BY_TEST_3 = 'data_test_3/BY_TEST_3.xlsx'
+BY_COL = 'BY_predict'
 
 
 ESD_TRAINING = 'esd_data/training.xlsx'
