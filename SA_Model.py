@@ -80,38 +80,55 @@ def print_partition(title=""):
         print("=" * 50)
 
 
-if __name__ == "__main__":
+import multiprocessing
+
+def generate_predictions(test_case, df, df_preprocessed):
+
+    if test_case == 1:
+        # Generate Test 1 Predictions
+        train_df = df[df['Year'] == 2]
+        test_df = df[df['Year'] == 1]
+        preprocess_train_df = df_preprocessed[df_preprocessed['Year'] == 2]
+        preprocess_test_df = df_preprocessed[df_preprocessed['Year'] == 1]
+
+        model = train_model(preprocess_train_df)
+        generate_excel(train_df, preprocess_train_df, model, constants.SA_TRAIN_2)
+        generate_excel(test_df, preprocess_test_df, model, constants.SA_TEST_1)
+
+    elif test_case == 2:
+        # Generate Test 2 Predictions
+        train_df = df[df['Year'] == 1]
+        test_df = df[df['Year'] == 2]
+        preprocess_train_df = df_preprocessed[df_preprocessed['Year'] == 1]
+        preprocess_test_df = df_preprocessed[df_preprocessed['Year'] == 2]
+
+        model = train_model(preprocess_train_df)
+        generate_excel(train_df, preprocess_train_df, model, constants.SA_TRAIN_1)
+        generate_excel(test_df, preprocess_test_df, model, constants.SA_TEST_2)
+
+    elif test_case == 3:
+        # Generate Test 3 Predictions
+        train_df = df[df['Year'] < 3]
+        test_df = df[df['Year'] == 3]
+        preprocess_train_df = df_preprocessed[df_preprocessed['Year'] < 3]
+        preprocess_test_df = df_preprocessed[df_preprocessed['Year'] == 3]
+
+        model = train_model(preprocess_train_df)
+        generate_excel(train_df, preprocess_train_df, model, constants.SA_TRAIN_1_2)
+        generate_excel(test_df, preprocess_test_df, model, constants.SA_TEST_3)
+
+def main():
     df = load_df()
     df_preprocessed = preprocess_df(df)
 
     print_partition("SA_Method")
 
-    # Generate Test 1 Predictions
-    train_df = df[df['Year'] == 2]
-    test_df = df[df['Year'] == 1]
-    preprocess_train_df = df_preprocessed[df_preprocessed['Year'] == 2]
-    preprocess_test_df = df_preprocessed[df_preprocessed['Year'] == 1]
+    # Create a list of test cases to process in parallel
+    test_cases = [1, 2, 3]
 
-    model = train_model(preprocess_train_df)
-    generate_excel(train_df, preprocess_train_df, model, constants.SA_TRAIN_2)
-    generate_excel(test_df, preprocess_test_df, model, constants.SA_TEST_1)
+    # Using multiprocessing to run predictions in parallel
+    with multiprocessing.Pool(processes=len(test_cases)) as pool:
+        pool.starmap(generate_predictions, [(test_case, df, df_preprocessed) for test_case in test_cases])
 
-    # Generate Test 2 Predictions
-    train_df = df[df['Year'] == 1]
-    test_df = df[df['Year'] == 2]
-    preprocess_train_df = df_preprocessed[df_preprocessed['Year'] == 1]
-    preprocess_test_df = df_preprocessed[df_preprocessed['Year'] == 2]
-
-    model = train_model(preprocess_train_df)
-    generate_excel(train_df, preprocess_train_df, model, constants.SA_TRAIN_1)
-    generate_excel(test_df, preprocess_test_df, model, constants.SA_TEST_2)
-
-    # Generate Test 3 Predictions
-    train_df = df[df['Year'] < 3]
-    test_df = df[df['Year'] == 3]
-    preprocess_train_df = df_preprocessed[df_preprocessed['Year'] < 3]
-    preprocess_test_df = df_preprocessed[df_preprocessed['Year'] == 3]
-
-    model = train_model(preprocess_train_df)
-    generate_excel(train_df, preprocess_train_df, model, constants.SA_TRAIN_1_2)
-    generate_excel(test_df, preprocess_test_df, model, constants.SA_TEST_3)
+if __name__ == "__main__":
+    main()

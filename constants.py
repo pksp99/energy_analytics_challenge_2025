@@ -44,3 +44,9 @@ BY_COL = 'Model BY'
 
 ESD_TRAINING = 'esd_data/training.xlsx'
 ESD_TESTING = 'esd_data/testing.xlsx'
+
+
+import pandas as pd
+def generate_results_latex(df: pd.DataFrame):
+    for row in df.values:
+        print(' & '.join(row))
